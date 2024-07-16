@@ -1,6 +1,6 @@
 # proyecto-iot
 desarrollar y proponer mejoras
-##Codigo  de node-red
+## Codigo  de node-red
 [
     {
         "id": "flow_sensor",
