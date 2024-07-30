@@ -128,7 +128,7 @@ npm install
 ## Contribución
 
 ¡Gracias por tu interés en contribuir a este proyecto! Aquí te explicamos cómo puedes colaborar.
-``` bash 
+
 ### Cómo Contribuir
 
 1. **Haz un Fork del Proyecto**
@@ -152,13 +152,13 @@ npm install
 
 4. **Realiza tus Cambios**
 
-    Realiza los cambios que deseas en el código. Asegúrate de seguir las guías de estilo y prácticas recomendadas del proyecto. Puedes encontrar estas guías en el archivo [CONTRIBUTING.md](link-al-archivo-CONTRIBUTING.md) si existe.
+    Realiza los cambios que deseas en el código
 
 5. **Añade y Haz Commit de tus Cambios**
 
     Añade los archivos modificados a la zona de preparación y haz commit de los cambios con un mensaje descriptivo.
     ```bash
-    git add .
+    git add . 
     git commit -m "Descripción de tus cambios"
     ```
 
@@ -174,7 +174,7 @@ npm install
     Ve a la página de tu fork en GitHub y haz clic en el botón "Compare & pull request". Llena la información requerida y crea el pull request. Describe tus cambios y por qué deberían fusionarse.
 
 
-```
+
 ## Integrantes
 
 - **Tu Nombre** - *Trabajo inicial* - [TuGitHub](https://github.com/tu-usuario)
