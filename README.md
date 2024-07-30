@@ -22,7 +22,7 @@ cd tu-proyecto
 
 # Instala las dependencias
 npm install
-
+```
 ## Uso
 Para importar el flujo de Node-RED, copia el siguiente código y pégalo en el editor de importación de Node-RED.
 [
