@@ -132,5 +132,6 @@ npm install
 - Montoya Castillo Alberto
 - Ruíz Morelos Abraham
 ## Agradecimientos 
-Agradecemos a Conocimiento libre por capacitarnos e  impulsar este proyecto 
-https://conocimientolibre.mx/
+- Agradecemos a Conocimiento libre por capacitarnos e  impulsar este proyecto 
+- [Conocimiento Libre](https://conocimientolibre.mx/)
+
