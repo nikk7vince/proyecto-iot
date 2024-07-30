@@ -128,9 +128,9 @@ npm install
 ## Contribución 
 
 ## Integrantes 
--García Gutiérrez José Manuel
--Montoya Castillo Alberto
--Ruíz Morelos Abraham
+- [García Gutiérrez José Manuel]
+- [Montoya Castillo Alberto]
+- [Ruíz Morelos Abraham] 
 ## Agradecimientos 
 Agradecemos a Conocimiento libre por capacitarnos e  impulsar este proyecto 
 https://conocimientolibre.mx/
