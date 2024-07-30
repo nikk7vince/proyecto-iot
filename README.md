@@ -1,6 +1,7 @@
 # ATL-Guardian  
 Detectar fugas y captar agua de las lluvia, con sensores que envian una notificacion a nuestro celular
-_Este proyecto utiliza Node-RED para gestionar diferentes sensores y actuar en consecuencia_
+
+**Este proyecto utiliza Node-RED para gestionar diferentes sensores y actuar en consecuencia**
 ## Tabla de Contenidos
 
 - [Instalación](#instalación)
