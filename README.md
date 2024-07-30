@@ -16,7 +16,13 @@ Para instalar el proyecto
 # Clona el repositorio
 De la parte del codigo copiarlo y colocarlo en la terminal .
 git clone https://github.com/tu-usuario/tu-proyecto.git
-´´´
+
+# Entra en el directorio del proyecto
+cd tu-proyecto
+
+# Instala las dependencias
+npm install
+
 ## Uso
 Para importar el flujo de Node-RED, copia el siguiente código y pégalo en el editor de importación de Node-RED.
 [
