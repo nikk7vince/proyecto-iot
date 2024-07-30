@@ -125,12 +125,68 @@ npm install
     }
 ]
 ``` 
-## Contribución 
+## Contribución
 
-## Integrantes 
+¡Gracias por tu interés en contribuir a este proyecto! Aquí te explicamos cómo puedes colaborar.
+``` bash 
+### Cómo Contribuir
+
+1. **Haz un Fork del Proyecto**
+
+    Haz un fork del repositorio en tu cuenta de GitHub haciendo clic en el botón "Fork" en la parte superior derecha de la página del repositorio.
+
+2. **Clona tu Fork**
+
+    Clona el repositorio forkeado a tu máquina local para que puedas empezar a trabajar en él.
+    ```bash
+    git clone https://github.com/tu-usuario/tu-proyecto-forkeado.git
+    cd tu-proyecto-forkeado
+    ```
+
+3. **Crea una Nueva Rama**
+
+    Es una buena práctica crear una nueva rama para trabajar en tus cambios. Esto mantiene tu trabajo organizado y separado de la rama principal.
+    ```bash
+    git checkout -b nombre-de-tu-rama
+    ```
+
+4. **Realiza tus Cambios**
+
+    Realiza los cambios que deseas en el código. Asegúrate de seguir las guías de estilo y prácticas recomendadas del proyecto. Puedes encontrar estas guías en el archivo [CONTRIBUTING.md](link-al-archivo-CONTRIBUTING.md) si existe.
+
+5. **Añade y Haz Commit de tus Cambios**
+
+    Añade los archivos modificados a la zona de preparación y haz commit de los cambios con un mensaje descriptivo.
+    ```bash
+    git add .
+    git commit -m "Descripción de tus cambios"
+    ```
+
+6. **Haz Push de tu Rama**
+
+    Sube tus cambios a tu fork en GitHub.
+    ```bash
+    git push origin nombre-de-tu-rama
+    ```
+
+7. **Abre un Pull Request**
+
+    Ve a la página de tu fork en GitHub y haz clic en el botón "Compare & pull request". Llena la información requerida y crea el pull request. Describe tus cambios y por qué deberían fusionarse.
+
+
+```
+## Integrantes
+
+- **Tu Nombre** - *Trabajo inicial* - [TuGitHub](https://github.com/tu-usuario)
+
 - García Gutiérrez José Manuel
 - Montoya Castillo Alberto
 - Ruíz Morelos Abraham
-## Agradecimientos 
+
+Mira la lista de [contribuyentes](https://github.com/tu-usuario/tu-proyecto/contributors) que participaron en este proyecto.
+
+### Agradecimientos
+- Agradecemos tu interés en contribuir a este proyecto. Tus contribuciones son valiosas y ayudan a mejorar el proyecto para todos los usuarios.
+
 - Agradecemos a  [Conocimiento Libre](https://conocimientolibre.mx/)  por capacitarnos e  impulsar este proyecto 
 
