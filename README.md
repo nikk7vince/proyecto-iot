@@ -1,6 +1,17 @@
 # proyecto-iot
-desarrollar y proponer mejoras
-## Codigo  de node-red
+Detectar fugas y captar agua de las lluvia, con sensores que envian una notificacion a nuestro celular 
+## Tabla de Contenidos
+
+- [Instalación](#instalación)
+- [Uso](#uso)
+- [Contribución](#contribución)
+- [Licencia](#licencia)
+- [Autores](#autores)
+- [Agradecimientos](#agradecimientos)
+## Instalación 
+Para instalar el proyecto 
+
+
 [
     {
         "id": "flow_sensor",
