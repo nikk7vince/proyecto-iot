@@ -177,8 +177,6 @@ npm install
 
 ## Integrantes
 
-- **Tu Nombre** - *Trabajo inicial* - [TuGitHub](https://github.com/tu-usuario)
-
 - García Gutiérrez José Manuel
 - Montoya Castillo Alberto
 - Ruíz Morelos Abraham
