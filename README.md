@@ -125,5 +125,5 @@ npm install
         "func": "let pressure = msg.payload.pressure;\nif (pressure < 1) {\n    msg.payload = `Alerta: Presión baja detectada - ${pressure} bar`;\n    return [msg, null];\n} else {\n    return [null, msg];\n}"
     }
 ]
-```bash
+``` 
 ## Contribucion 
