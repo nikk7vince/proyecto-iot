@@ -24,6 +24,7 @@ cd tu-proyecto
 npm install
 ```
 ## Uso
+```bash 
 Para importar el flujo de Node-RED, copia el siguiente código y pégalo en el editor de importación de Node-RED.
 [
     {
@@ -117,6 +118,7 @@ Para importar el flujo de Node-RED, copia el siguiente código y pégalo en el e
     },
     {
         "id": "func_detectar_anomalias_presion",
+```bash
         "type": "function",
         "z": "1",
         "name": "Detectar Anomalías Presión",
