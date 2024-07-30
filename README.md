@@ -126,4 +126,4 @@ npm install
     }
 ]
 ``` 
-## Contribucion 
+## Contribución 
