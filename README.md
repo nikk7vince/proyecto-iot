@@ -7,8 +7,7 @@ Detectar fugas y captar agua de las lluvia, con sensores que envian una notifica
 - [Instalación](#instalación)
 - [Uso](#uso)
 - [Contribución](#contribución)
-- [Licencia](#licencia)
-- [Autores](#autores)
+- [Integrantes](#Integrantes)
 - [Agradecimientos](#agradecimientos)
 ## Instalación 
 Para instalar el proyecto 
@@ -127,3 +126,11 @@ npm install
 ]
 ``` 
 ## Contribución 
+
+## Integrantes 
+García Gutiérrez José Manuel
+Montoya Castillo Alberto
+Ruíz Morelos Abraham
+## Agradecimientos 
+Agradecemos a Conocimiento libre por capacitarnos e  impulsar este proyecto 
+https://conocimientolibre.mx/
