@@ -1,4 +1,4 @@
-# proyecto-iot
+# ATL-Guardian  
 Detectar fugas y captar agua de las lluvia, con sensores que envian una notificacion a nuestro celular 
 ## Tabla de Contenidos
 
@@ -10,8 +10,13 @@ Detectar fugas y captar agua de las lluvia, con sensores que envian una notifica
 - [Agradecimientos](#agradecimientos)
 ## Instalación 
 Para instalar el proyecto 
+```bash
+# Clona el repositorio
+De la parte del codigo copiarlo y colocarlo en la terminal .
+git clone https://github.com/tu-usuario/tu-proyecto.git
 
-
+## Uso
+Para importar el flujo de Node-RED, copia el siguiente código y pégalo en el editor de importación de Node-RED.
 [
     {
         "id": "flow_sensor",
@@ -107,4 +112,6 @@ Para instalar el proyecto
         "type": "function",
         "z": "1",
         "name": "Detectar Anomalías Presión",
-        "func": "let pressure = msg.payload.pressure;\nif (pressure < 1) {\n    msg.payload = `Alerta: Presión baja detectada - ${pressure} bar`;\n    return [msg, null];\n} else {\n    return [null,
+        "func": "let pressure = msg.payload.pressure;\nif (pressure < 1) {\n    msg.payload = `Alerta: Presión baja detectada - ${pressure} bar`;\n    return [msg, null];\n} else {\n    return [null, msg];\n}"
+    }
+]
