@@ -2,6 +2,7 @@
 Detectar fugas y captar agua de las lluvia, con sensores que envian una notificacion a nuestro celular
 
 **Este proyecto utiliza Node-RED para gestionar diferentes sensores y actuar en consecuencia**
+Promueve el control de consumo de agua consiente y otras aplicaciones
 ## Tabla de Contenidos
 
 - [Instalación](#instalación)
@@ -12,6 +13,150 @@ Detectar fugas y captar agua de las lluvia, con sensores que envian una notifica
 ## Instalación 
 Para instalar el proyecto 
 ```bash
+Código en python : Recuerda instalar mqtt y actualizar los paquetes 
+#!/usr/bin/python
+import os
+import glob
+import time
+import paho.mqtt.client as mqtt
+import json
+import RPi.GPIO as GPIO
+
+# Configuración del cliente MQTT
+broker = "localhost"
+port = 1883
+topic = "codigoIoT/mqtt/flujo"
+client_id = "Jose23_03"
+
+# Configuración de los pines GPIO
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(23, GPIO.OUT)
+GPIO.setup(10, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(12, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(13, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+# Funciones para conectarse al broker MQTT y publicar mensajes
+def connect_mqtt():
+    client = mqtt.Client(client_id=client_id)
+    client.on_connect = on_connect
+    client.on_disconnect = on_disconnect
+    client.connect(broker, port)
+    client.loop_start()
+    return client
+
+def on_connect(client, userdata, flags, rc):
+    if rc == 0:
+        print("Connected to MQTT Broker!")
+    else:
+        print(f"Failed to connect, return code {rc}")
+
+def on_disconnect(client, userdata, rc):
+    print("Disconnected from MQTT Broker")
+
+def publish(client, topic, message):
+    try:
+        result = client.publish(topic, message)
+        status = result[0]
+        if status == 0:
+            print(f"Published: {message} to topic: {topic}")
+        else:
+            print(f"Failed to send message to topic {topic}")
+    except RuntimeError as error:
+        print(f"Error publishing data: {error}")
+
+# Funciones para leer los sensores
+def read_flow_sensor():
+    global count
+    global last_state
+    current_state = GPIO.input(13)
+    if current_state != last_state:
+        if current_state == GPIO.LOW:
+            count += 1
+        last_state = current_state
+
+def read_temperature():
+    list = os.listdir("/sys/bus/w1/devices/")
+    if "w1_bus_master1" in list:
+        list.remove("w1_bus_master1")
+    file_count = len(list)
+    if file_count > 0:
+        ruta = glob.glob('/sys/bus/w1/devices/' + '28*')[0]
+        if os.path.exists(ruta):
+            with open(ruta + '/w1_slave') as fSensor:
+                linSensor = fSensor.readlines()
+                if len(linSensor) > 0:
+                    posTemp = linSensor[1].find('t=')
+                    if posTemp != -1:
+                        strTemp = linSensor[1][posTemp+2:]
+                        return float(strTemp) / 1000.0
+    return None
+
+# Conectar al broker MQTT
+client = connect_mqtt()
+
+# Variables globales
+count = 0
+last_state = GPIO.input(13)
+estado_anterior = False
+
+try:
+    while True:
+        try:
+            # Leer el sensor de flujo
+            start_time = time.time()
+            count = 0
+            while time.time() - start_time < 3:
+                read_flow_sensor()
+            flow = (count * 60 * 2.25 / 1000)
+
+            # Leer el sensor de temperatura
+            temp = read_temperature()
+
+            # Leer el nivel de agua
+            estado_pin10 = GPIO.input(10)
+            estado_pin12 = GPIO.input(12)
+            GPIO.output(23, estado_pin10)
+            if estado_pin10 and not estado_anterior:
+                porcentaje = 80
+                print("Nivel de agua alto, tienes 5 minutos para apagar la bomba")
+            elif estado_pin12 and not estado_pin10:
+                porcentaje = 50
+                print("Nivel de agua medio")
+            elif not estado_pin10 and not estado_pin12:
+                porcentaje = 10
+                print("Nivel de agua bajo")
+
+            # Formatear flow_rate para incluir "Litros/min"
+            flow_rate_str = f"{flow:.2f} Litros/min"
+
+            # Publicar el flujo, temperatura y nivel del agua en un solo tema
+            if temp is not None:
+                print(f"Temperatura: {temp} C")
+                print(f"Flujo: {flow_rate_str}")
+                print(f"Nivel de agua: {porcentaje}%")
+                message = {
+                    "ID": client_id,
+                    "temp": temp,
+                    "flow_rate": flow_rate_str,
+                    "water_level": porcentaje
+                }
+                publish(client, topic, json.dumps(message))
+            estado_anterior = estado_pin10
+            time.sleep(5)
+        except KeyboardInterrupt:
+            print('\nInterrupción por teclado')
+            GPIO.cleanup()
+            client.loop_stop()
+            break
+        except Exception as e:
+            print(f"Error: {e}")
+            GPIO.cleanup()
+            client.loop_stop()
+except Exception as e:
+    print(f"Error general: {e}")
+    GPIO.cleanup()
+    client.loop_stop()
+
 # Clona el repositorio
 De la parte del codigo copiarlo y colocarlo en la terminal .
 git clone https://github.com/tu-usuario/tu-proyecto.git
@@ -20,7 +165,7 @@ git clone https://github.com/tu-usuario/tu-proyecto.git
 cd tu-proyecto
 
 # Instala las dependencias
-npm install
+npm install-este flujo en node red utiliza nodos de  telegram 
 ```
 ## Uso
 
@@ -28,288 +173,37 @@ npm install
 ```bash
 [
     {
-        "id": "63625b706ff6379a",
-        "type": "tab",
-        "label": "Flow 9",
-        "disabled": true,
-        "info": "",
-        "env": []
-    },
-    {
-        "id": "6e98fd523b1bf1ed",
-        "type": "mqtt in",
-        "z": "63625b706ff6379a",
-        "name": "",
-        "topic": "codigoIoT/mqtt/flujo",
-        "qos": "2",
-        "datatype": "auto-detect",
-        "broker": "a9128d20175a87ac",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 0,
-        "x": 230,
-        "y": 140,
-        "wires": [
-            [
-                "a4ff96f0f1498bb8",
-                "a6f4bab881826c11",
-                "eac75981ce9b80a1",
-                "204c50015f4ab441"
-            ]
-        ]
-    },
-    {
-        "id": "a4ff96f0f1498bb8",
-        "type": "function",
-        "z": "63625b706ff6379a",
-        "name": "Extraer Temp",
-        "func": "msg.topic =msg.payload.ID;\nmsg.payload=msg.payload.temp;\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 450,
-        "y": 100,
-        "wires": [
-            [
-                "027af0bb582ea761",
-                "897919b988262090"
-            ]
-        ]
-    },
-    {
-        "id": "a6f4bab881826c11",
-        "type": "function",
-        "z": "63625b706ff6379a",
-        "name": "Extraer Hum",
-        "func": "msg.topic = msg.payload.ID;\nmsg.payload=msg.payload.hum;\n\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 450,
-        "y": 180,
-        "wires": [
-            [
-                "e068672a21c3d970",
-                "897919b988262090"
-            ]
-        ]
-    },
-    {
-        "id": "027af0bb582ea761",
+        "id": "885338b9862bf770",
         "type": "ui_gauge",
-        "z": "63625b706ff6379a",
+        "z": "87f7775ba2d86b8a",
         "name": "",
-        "group": "08d40e027fb0f7f9",
-        "order": 0,
-        "width": 0,
-        "height": 0,
-        "gtype": "gage",
-        "title": "Temp. Actual",
-        "label": "°C",
-        "format": "{{value}}",
-        "min": 0,
-        "max": "50",
-        "colors": [
-            "#20cdff",
-            "#2ee600",
-            "#ff0202"
-        ],
-        "seg1": "",
-        "seg2": "",
-        "diff": false,
-        "className": "",
-        "x": 730,
-        "y": 60,
-        "wires": []
-    },
-    {
-        "id": "e068672a21c3d970",
-        "type": "ui_gauge",
-        "z": "63625b706ff6379a",
-        "name": "",
-        "group": "f323906c191efaa9",
+        "group": "114c7ecd83be776e",
         "order": 0,
         "width": 0,
         "height": 0,
         "gtype": "wave",
-        "title": "Hum. Actual",
+        "title": "TINACO",
         "label": "%",
         "format": "{{value}}",
-        "min": 0,
+        "min": "0",
         "max": "100",
         "colors": [
-            "#00b500",
+            "#e01b24",
             "#e6e600",
-            "#ca3838"
+            "#1a5fb4"
         ],
         "seg1": "",
         "seg2": "",
         "diff": false,
         "className": "",
-        "x": 730,
-        "y": 260,
+        "x": 520,
+        "y": 560,
         "wires": []
     },
     {
-        "id": "897919b988262090",
-        "type": "ui_chart",
-        "z": "63625b706ff6379a",
-        "name": "",
-        "group": "b78994697d2872cb",
-        "order": 0,
-        "width": 0,
-        "height": 0,
-        "label": "Temp. y Hum. en el tiempo",
-        "chartType": "line",
-        "legend": "true",
-        "xformat": "HH:mm:ss",
-        "interpolate": "linear",
-        "nodata": "Esperando datos",
-        "dot": false,
-        "ymin": "0",
-        "ymax": "100",
-        "removeOlder": "12",
-        "removeOlderPoints": "",
-        "removeOlderUnit": "3600",
-        "cutout": 0,
-        "useOneColor": false,
-        "useUTC": false,
-        "colors": [
-            "#ff790b",
-            "#31d0ff",
-            "#006fbf",
-            "#2ca02c",
-            "#98df8a",
-            "#d62728",
-            "#ff9896",
-            "#9467bd",
-            "#c5b0d5"
-        ],
-        "outputs": 1,
-        "useDifferentColor": false,
-        "className": "",
-        "x": 760,
-        "y": 140,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "0e268b4d2f6e2142",
-        "type": "mysql",
-        "z": "63625b706ff6379a",
-        "mydb": "06fc599aef97a462",
-        "name": "",
-        "x": 770,
-        "y": 380,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "eac75981ce9b80a1",
-        "type": "function",
-        "z": "63625b706ff6379a",
-        "name": "Generar consulta",
-        "func": "// Verificar que los datos de la carga útil no estén indefinidos\nvar id = msg.payload.ID || 'Jose23_03'; // Usa el ID proporcionado o un valor predeterminado\nvar temp = msg.payload.temp;\nvar hum = msg.payload.hum;\nvar caud;\n\n// Asegurarse de que flow_rate tenga un valor y formatearlo\nif (msg.payload.flow_rate) {\n    caud = msg.payload.flow_rate + \" Litros/min\";\n} else {\n    caud = \"0.00 Litros/min\";\n}\n\n// Generar inicio del query\nmsg.topic = \"INSERT INTO agua (nombre, temperatura, humedad, Caudal) VALUES (\";\n// Concatenar identidad del usuario\nmsg.topic += \"'\" + id + \"'\" + \", \";\n// Concatenar temperatura\nmsg.topic += temp + \", \";\n// Concatenar humedad\nmsg.topic += hum + \", \";\n// Concatenar CAUDAL como cadena con el formato adecuado\nmsg.topic += \"'\" + caud + \"'\" + \");\";\nreturn msg;\n\n\n",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 470,
-        "y": 380,
-        "wires": [
-            [
-                "0e268b4d2f6e2142"
-            ]
-        ]
-    },
-    {
-        "id": "c712985e7d2f659c",
-        "type": "inject",
-        "z": "63625b706ff6379a",
-        "name": "",
-        "props": [
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "INSERT INTO agua (nombre, temperatura, humedad, Caudal) VALUES ('VINCE_NK', 24, 65, '120.50 Litros/min - Sensor en el tanque de agua');",
-        "x": 470,
-        "y": 520,
-        "wires": [
-            [
-                "0e268b4d2f6e2142"
-            ]
-        ]
-    },
-    {
-        "id": "204c50015f4ab441",
-        "type": "function",
-        "z": "63625b706ff6379a",
-        "name": "function 12",
-        "func": "msg.topic = msg.payload.ID;\nmsg.payload = msg.payload.flow_rate;\n\n\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 490,
-        "y": 280,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "a9128d20175a87ac",
-        "type": "mqtt-broker",
-        "name": "Mosquitto RPi",
-        "broker": "localhost",
-        "port": "1883",
-        "clientid": "",
-        "autoConnect": true,
-        "usetls": false,
-        "protocolVersion": "4",
-        "keepalive": "60",
-        "cleansession": true,
-        "autoUnsubscribe": true,
-        "birthTopic": "",
-        "birthQos": "0",
-        "birthRetain": "false",
-        "birthPayload": "",
-        "birthMsg": {},
-        "closeTopic": "",
-        "closeQos": "0",
-        "closeRetain": "false",
-        "closePayload": "",
-        "closeMsg": {},
-        "willTopic": "",
-        "willQos": "0",
-        "willRetain": "false",
-        "willPayload": "",
-        "willMsg": {},
-        "userProps": "",
-        "sessionExpiry": ""
-    },
-    {
-        "id": "08d40e027fb0f7f9",
+        "id": "114c7ecd83be776e",
         "type": "ui_group",
-        "name": "Temperatura",
+        "name": "Nivel",
         "tab": "7d055cfb531cd518",
         "order": 1,
         "disp": true,
@@ -318,42 +212,10 @@ npm install
         "className": ""
     },
     {
-        "id": "f323906c191efaa9",
-        "type": "ui_group",
-        "name": "Humedad",
-        "tab": "7d055cfb531cd518",
-        "order": 2,
-        "disp": true,
-        "width": "6",
-        "collapse": false,
-        "className": ""
-    },
-    {
-        "id": "b78994697d2872cb",
-        "type": "ui_group",
-        "name": "Histórico",
-        "tab": "7d055cfb531cd518",
-        "order": 3,
-        "disp": true,
-        "width": "6",
-        "collapse": false,
-        "className": ""
-    },
-    {
-        "id": "06fc599aef97a462",
-        "type": "MySQLdatabase",
-        "name": "",
-        "host": "127.0.0.1",
-        "port": "3306",
-        "db": "proyecto_pr",
-        "tz": "-07:00",
-        "charset": "UTF8"
-    },
-    {
         "id": "7d055cfb531cd518",
         "type": "ui_tab",
         "name": "Clima",
-        "icon": "wi-wu-mostlysunny",
+        "icon": "opacity",
         "order": 2,
         "disabled": false,
         "hidden": false
