@@ -220,7 +220,7 @@ npm install-este flujo en node red utiliza nodos de  telegram
         "disabled": false,
         "hidden": false
     }
-]
+]```
 ## Contribución
 
 ¡Gracias por tu interés en contribuir a este proyecto! Aquí te explicamos cómo puedes colaborar.
